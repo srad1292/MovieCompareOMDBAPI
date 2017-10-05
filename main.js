@@ -2,8 +2,14 @@ $(document).ready(function() {
 	var $Form = $('form');
 	var $Container = $('#resultsContainer');
 	$Container.hide();
+	
 	$Form.on('submit', function(p_oEvent){
-	    var sUrl, sMovie, oData;
+		fillOutResults(p_oEvent);       
+	});
+
+
+	function fillOutResults(p_oEvent) {
+		var sUrl, sMovie, oData;
 	    p_oEvent.preventDefault();
 		sMovie = $Form.find('#title').val();
 	    //Get movie by id
@@ -13,20 +19,47 @@ $(document).ready(function() {
 	    $.ajax(sUrl, {
 	        complete: function(p_oXHR, p_sStatus){
 	            oData = $.parseJSON(p_oXHR.responseText);
-	            oData = oData.results[0];
-	            console.log(oData);
-
-	
+	            console.log("Results: " + oData.results.length);	
 				if (oData.Response === "False") {
 					$Container.hide();
-				} else {
-					console.log("Title: " + oData.title);
-					$('.foundTitle').text("Title: " + oData.title);
-					$Container.find('.plot').text("Plot: " + oData.overview);
-					$Container.find('.year').text("Release: " + oData.release_date);
+				} 
+				else {
+					var row = 0;
+					var col = 0;
+					var currentResult = oData.results[row];
+					$("#resultsTable").find("td").each(function() {
+						if(row < oData.results.length){
+							if(col === 0){
+								$(this).html((row+1) + "");
+								col+=1;
+							}
+							
+							else if(col === 1) {
+								$(this).html(currentResult.title);
+								col++;
+							}
+							else if(col === 2) {
+								$(this).html(currentResult.release_date);
+								col++
+							}
+							else if(col === 3) {
+								$(this).html(currentResult.overview);
+								col = 0;
+								row += 1;
+								if(oData.results.length > row){
+									currentResult = oData.results[row];
+								}
+							}
+						}
+
+					});
+
+					//$("#resultsOne:nth-child(2)").text(oData.title);
+					
 					$Container.show();
+					
 				}
 	        }
-	    });    
-	});
+	    }); 
+	}
 });
