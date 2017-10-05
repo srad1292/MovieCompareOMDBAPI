@@ -1,0 +1,33 @@
+.header {
+	text-align: center;
+	font-weight: bold;
+	margin-bottom: 4em;
+}
+
+.selectContainer {
+	text-align: center;
+}
+
+#titleLabel, #yearLabel{
+	font-weight: bold;
+}
+
+input {
+	margin-bottom: 1em;
+	width: 20%;
+}
+
+#searchButton{
+	background-color: aqua;
+	border-radius: 5px;
+	color: black;
+	font-size: 1em;
+	font-weight: bold;
+	min-width: 5em;
+	width: 8%;
+
+}
+
+#resultsContainer {
+	text-align: center;
+}

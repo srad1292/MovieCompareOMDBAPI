@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Movie Comparison</title>
+	<link href="style.css" rel="stylesheet">
+</head>
+<body>
+	
+	<div class="header">
+		<h2>Movie Comparator</h2>
+	</div>
+
+	<div class="selectContainer">
+		<form target="_self">
+			<label for="title" id="titleLabel">Title: </label>
+			<input type="text" id="title" required><br>
+			<label for="year" id="yearLabel">Year: </label>
+			<!-- max year will be set using jquery -->
+			<input type="number" id="year" min=1888><br>
+			<button id="searchButton">Search</button>
+		</form>
+	</div>
+
+
+	<div id="resultsContainer">
+    	<p class="foundTitle">Title</h3>
+    	<p class="plot">Plot</p>
+    	<span class="year">Year</span>
+	</div>
+
+
+	<div class="tableContainer">
+		
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.2.1.js" 
+	integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE="
+	crossorigin="anonymous"></script>
+
+	<script src="main.js"></script>
+</body>
+</html>
