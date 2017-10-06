@@ -1,4 +1,11 @@
 $(document).ready(function() {
+	
+	/**
+	Set the maximum for the year picker to 
+	the present year + a few years ahead
+	*/
+	var currentYear = (new Date()).getFullYear();
+	$("#year").attr("max",currentYear+5);
 	var $Form = $('form');
 	var qResults;
 	var $Container = $('#resultsContainer');
@@ -21,22 +28,52 @@ $(document).ready(function() {
 	    	
 	        complete: function(p_oXHR, p_sStatus){
 	            oData = $.parseJSON(p_oXHR.responseText);
-	            console.log("Results: " + oData.results.length);	
+	            console.log(oData);	
 				if (oData.Response === "False") {
 					$Container.hide();
 				}
 				else{
-					setData(oData);
-					fillOutResults();  
+//					setData(oData);
+					qResults = oData;
+					fillOutResults("search");
 				} 
 	        }
 	    });
 
 	}
 
-	function fillOutResults() {
+	function fillOutResults(callee) {
 		var row = 0;
 		var col = 0;
+	
+		if(callee !== "search"){
+			var rOne = $("#resultsOne").find("td:first").text();
+			var rTwo = $("#resultsTwo").find("td:first").text();
+			var rThree = $("#resultsThree").find("td:first").text();
+			var rFour = $("#resultsFour").find("td:first").text();
+			var rFive = $("#resultsFive").find("td:first").text();
+		}
+		if(callee === "next"){
+			//turn this row into a number
+			var temp = Number(rFive || rFour || rThree || rTwo || rOne);
+			if(temp >= qResults.results.length) return;
+			else{
+				row = temp;
+				clearOutResults();
+			}
+		}
+		if(callee === "prev"){
+			//turn this row into a number
+			var temp = Number(rOne) - 6;
+			
+			if(temp < 0) return;
+			else {
+				row = temp;
+				clearOutResults();
+			}
+
+		}
+	
 		var currentResult = qResults.results[row];
 		$("#resultsTable").find("td").each(function() {
 			if(row < qResults.results.length){
@@ -58,6 +95,7 @@ $(document).ready(function() {
 					row += 1;
 					if(qResults.results.length > row){
 						currentResult = qResults.results[row];
+						console.log(currentResult);
 					}
 				}
 			}
@@ -69,8 +107,21 @@ $(document).ready(function() {
 		qResults = oData;
 	}
 
+	function clearOutResults(){
+		$("#resultsTable").find("td").each(function() { 
+			$(this).html("");
+		});
+	}
 
-	
+	$("#nextFive").click(function(){fillOutResults("next")});
+	$("#prevFive").click(function(){fillOutResults("prev")});
+	$("#clearResults").click(function(){
+		clearOutResults(); 
+		$Container.hide();
+	});
+
+
+
 });
 
 
