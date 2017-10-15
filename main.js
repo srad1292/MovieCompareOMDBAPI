@@ -1,17 +1,51 @@
+/**
+
+Steps done 
+
+1 - Main Heading
+2 - Title Input
+3 - Get data through API from title input
+4 - Search button works
+5 - Display results of the search
+6 - Displays the first five items
+7 - Correctly displays even if a movie has an empty field
+8 - Searching clears first
+9 - Previous works only when it should
+10 - Next works only when it should
+11 - Clear works
+12 - Button on a result adds move to 'your movies'
+13 - 'your movies' displays correctly
+14 - Removing an item from 'your movies'
+15 - Numbers update accurately
+
+Steps left
+
+1 - Clicking to add doesn't add something already added
+2 - Sort the 'your movies' table
+3 - Make tables look nice(maybe use bootstrap)
+4 - Clean up UI
+5 - Clean up code
+*/
+
 $(document).ready(function() {
 	
 	/**
 	Set the maximum for the year picker to 
 	the present year + a few years ahead
 	*/
+	var COLS = 5;
 	var currentYear = (new Date()).getFullYear();
 	$("#year").attr("max",currentYear+5);
 	var $Form = $('form');
 	var qResults;
 	var $Container = $('#resultsContainer');
+	var $tableContainer = $('#tableContainer');
 	$Container.hide();
+	$tableContainer.hide();
+	//initDisplayTable();
 	
 	$Form.on('submit', function(p_oEvent){
+		clearOutResults();
 		getResults(p_oEvent);     
 	});
 
@@ -90,12 +124,21 @@ $(document).ready(function() {
 					col++
 				}
 				else if(col === 3) {
-					$(this).html(currentResult.overview);
+					var over = currentResult.overview;
+					if(over === ""){
+						over = "N/A";
+					}
+					
+					$(this).html(over);
+					col++;
+				}
+				else if(col ==4){
 					col = 0;
 					row += 1;
+					$(this).text("?")
 					if(qResults.results.length > row){
 						currentResult = qResults.results[row];
-						console.log(currentResult);
+
 					}
 				}
 			}
@@ -113,6 +156,68 @@ $(document).ready(function() {
 		});
 	}
 
+	/**
+	Check display table to make sure you don't
+	add a movie multiple times
+	*/
+	function checkIfAdded() {
+
+	}
+
+	$(".addRow").on('click', function(){
+		event.stopPropagation();
+		var newRow = elt("tr");
+		$(this).parent().find("td").each(function() {
+			console.log("Value: " + $(this).html());
+			var data = elt("td");
+			var node = document.createTextNode($(this).html());
+			data.appendChild(node);
+			if($(this).html() === "?"){
+				data.onclick = function(){removeRow(data)};		
+			}
+			newRow.appendChild(data);
+		});
+		var tc = document.getElementById("displayTable");
+		tc.appendChild(newRow);
+		setNumbers();
+		//$tableContainer.append(newRow);
+		$tableContainer.show();
+		//create a row with data based on the row to add
+		//add row to the table
+		//display the table
+	});
+
+
+	function elt(name, className) {
+		var elt = document.createElement(name);
+		if(className){
+			elt.className = className;
+		}
+		return elt;
+	}
+
+	function removeRow(data){
+		var parent = data.parentElement.parentElement;
+		var child = data.parentElement; 
+		console.log(data.parentElement.parentElement);
+		parent.removeChild(child);
+		setNumbers();
+
+	}
+
+	function setNumbers() {
+		var count = 1;
+		$("#displayTable").find("tr").each(function(count) {
+			var s = count;
+			$(this).children("td:first").html(s);
+			s++;
+			
+		});
+		count = 1;
+	}
+
+
+
 	$("#nextFive").click(function(){fillOutResults("next")});
 	$("#prevFive").click(function(){fillOutResults("prev")});
 	$("#clearResults").click(function(){
@@ -120,6 +225,7 @@ $(document).ready(function() {
 		$Container.hide();
 	});
 
+	
 
 
 });
