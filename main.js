@@ -7,24 +7,29 @@ Steps done
 3 - Get data through API from title input
 4 - Search button works
 5 - Display results of the search
-6 - Displays the first five items
+6 - Displays five items at a time
 7 - Correctly displays even if a movie has an empty field
-8 - Searching clears first
+8 - Searching, prev, next clears first
 9 - Previous works only when it should
 10 - Next works only when it should
 11 - Clear works
-12 - Button on a result adds move to 'your movies'
+12 - Button on a result adds movie to 'your movies'
 13 - 'your movies' displays correctly
-14 - Removing an item from 'your movies'
+14 - Removing an item from 'your movies' works
 15 - Numbers update accurately
+16 - Clicking to add doesn't add something already added
+
+Should - 
+1 - A 0 rating be left as 0 or changed to N/A (how does each affect sorting)
+2 - Removing the only item on results table hide the table
+
 
 Steps left
 
-1 - Clicking to add doesn't add something already added
-2 - Sort the 'your movies' table
-3 - Make tables look nice(maybe use bootstrap)
-4 - Clean up UI
-5 - Clean up code
+1 - Sort the 'your movies' table
+2 - Make tables look nice(maybe use bootstrap)
+3 - Clean up UI
+4 - Clean up code
 */
 
 $(document).ready(function() {
@@ -132,7 +137,11 @@ $(document).ready(function() {
 					$(this).html(over);
 					col++;
 				}
-				else if(col ==4){
+				else if(col == 4){
+					$(this).html(currentResult.vote_average);
+					col++;
+				}
+				else if(col ==5){
 					col = 0;
 					row += 1;
 					$(this).text("?")
@@ -160,28 +169,45 @@ $(document).ready(function() {
 	Check display table to make sure you don't
 	add a movie multiple times
 	*/
-	function checkIfAdded() {
-
+	function isDuplicate(row) {
+		var dup = false;
+		var title = $(':nth-child(2)',row).html();
+		var date = $(':nth-child(3)',row).html();
+		var description = $(':nth-child(4)',row).html();
+		var dt, dd, ddes;
+		$("#displayTable").find("tr").each(function() {
+			dt = $(':nth-child(2)',this).html();
+			dd = $(':nth-child(3)',this).html();
+			ddes = $(':nth-child(4)',this).html();
+			if(title == dt && date == dd && description == ddes){
+				console.log("duplicate");
+				dup = true;
+			}
+			//$(this).children("td:first").html(s);
+		});
+		return dup;
 	}
 
 	$(".addRow").on('click', function(){
 		event.stopPropagation();
-		var newRow = elt("tr");
-		$(this).parent().find("td").each(function() {
-			console.log("Value: " + $(this).html());
-			var data = elt("td");
-			var node = document.createTextNode($(this).html());
-			data.appendChild(node);
-			if($(this).html() === "?"){
-				data.onclick = function(){removeRow(data)};		
-			}
-			newRow.appendChild(data);
-		});
-		var tc = document.getElementById("displayTable");
-		tc.appendChild(newRow);
-		setNumbers();
-		//$tableContainer.append(newRow);
-		$tableContainer.show();
+		if(!isDuplicate($(this).parent())){
+			var newRow = elt("tr");
+			$(this).parent().find("td").each(function() {
+				console.log("Value: " + $(this).html());
+				var data = elt("td");
+				var node = document.createTextNode($(this).html());
+				data.appendChild(node);
+				if($(this).html() === "?"){
+					data.onclick = function(){removeRow(data)};		
+				}
+				newRow.appendChild(data);
+			});
+			var tc = document.getElementById("displayTable");
+			tc.appendChild(newRow);
+			setNumbers();
+			//$tableContainer.append(newRow);
+			$tableContainer.show();
+		}
 		//create a row with data based on the row to add
 		//add row to the table
 		//display the table
