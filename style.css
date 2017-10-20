@@ -1,3 +1,6 @@
+/**
+CSS For The Top Section
+**/
 .header {
 	text-align: center;
 	font-weight: bold;
@@ -24,8 +27,6 @@ input {
 	width: 20%;
 }
 
-
-
 button {
 	background-color: #33adff;
 	border-radius: 5px;
@@ -38,16 +39,8 @@ button:hover {
 	color: white;
 }
 
-.removeThisRow, .addRow {
-	font-size: 1.3em;
-}
 
-.removeThisRow:hover, .addRow:hover {
-	color: red;
-}
-
-
-
+/**CSS for Tables and their containers*//
 #resultsContainer {
 	padding-bottom: 3rem;
 }
@@ -56,7 +49,10 @@ button:hover {
 	text-align: center;
 }
 
-/**(#rowOne).first(td)*/
+caption {
+	font-size: 1.4em;
+	font-weight: bold;	
+}
 
 table {
 	border-collapse: collapse;
@@ -82,10 +78,6 @@ th {
 
 }
 
-.sortable:hover{
-	color: white;
-}
-
 td {
 	background-color: #99d6ff;
 	background-color: rgb(153, 214, 255);
@@ -93,14 +85,27 @@ td {
 	padding-top: 1rem;
 }
 
-
+/*Keep the whole date on one line when the screen size is big enough*/
 .dateWidth {
 	word-wrap: break-word;
 	width: 8%;
 }
 
-caption {
-	font-size: 1.4em;
-	font-weight: bold;	
+.removeThisRow, .addRow {
+	font-size: 1.3em;
 }
+
+/*Show that the '?' are clickable to add/remove rows*/
+.removeThisRow:hover, .addRow:hover {
+	color: red;
+}
+
+/*The four headings that can be sorted by should show they are clickable */
+.sortable:hover{
+	color: white;
+}
+
+
+
+
 
