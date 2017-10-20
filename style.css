@@ -42,7 +42,11 @@ button:hover {
 
 /**CSS for Tables and their containers*//
 #resultsContainer {
-	padding-bottom: 3rem;
+	margin-bottom: 3rem;
+}
+
+#tableContainer {
+	margin-top: 3rem;
 }
 
 #resultsContainer, #tableContainer {
