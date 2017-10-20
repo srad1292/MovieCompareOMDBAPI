@@ -15,34 +15,38 @@
 }
 
 input {
+	background-color: #c4d5ef;
 	border-radius: .5em;
 	margin-bottom: 1em;
 	height: 1.3rem;
 	padding-left: 0.5em;
+	text-shadow: white 0px 0px 10px;
 	width: 20%;
 }
 
-#searchButton{
-	background-color: #33adff;
-	border-radius: 5px;
-	color: black;
-	font-size: 1em;
-	font-weight: bold;
-	min-width: 5em;
-	width: 8%;
 
-}
 
 button {
 	background-color: #33adff;
 	border-radius: 5px;
 	font-size: 1em;
 	font-weight: bold;
-}
-
-.resultsButtons{
 	width: 6rem;
 }
+
+button:hover {
+	color: white;
+}
+
+.removeThisRow, .addRow {
+	font-size: 1.3em;
+}
+
+.removeThisRow:hover, .addRow:hover {
+	color: red;
+}
+
+
 
 #resultsContainer {
 	padding-bottom: 3rem;
@@ -59,6 +63,7 @@ table {
 	border: 1px solid black;
 	empty-cells: hide;
 	margin: auto;
+	width: 100%;
 }
 
 th, td{
@@ -77,6 +82,10 @@ th {
 
 }
 
+.sortable:hover{
+	color: white;
+}
+
 td {
 	background-color: #99d6ff;
 	background-color: rgb(153, 214, 255);
@@ -84,14 +93,6 @@ td {
 	padding-top: 1rem;
 }
 
-
-#descriptionStyle{
-	padding-right: 7rem;
-}
-
-#descriptionHeading{
-	padding-right: 6rem;
-}
 
 .dateWidth {
 	word-wrap: break-word;

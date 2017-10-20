@@ -85,7 +85,7 @@ $(document).ready(function() {
 					col++;
 				}
 				else if(col === 2) {
-					$(this).html(currentResult.release_date);
+					$(this).html(currentResult.vote_average);
 					col++
 				}
 				else if(col === 3) {
@@ -98,7 +98,7 @@ $(document).ready(function() {
 					col++;
 				}
 				else if(col == 4){
-					$(this).html(currentResult.vote_average);
+					$(this).html(currentResult.release_date);
 					col++;
 				}
 				else if(col ==5){
@@ -132,14 +132,14 @@ $(document).ready(function() {
 	function isDuplicate(row) {
 		var dup = false;
 		var title = $(':nth-child(2)',row).html();
-		var date = $(':nth-child(3)',row).html();
 		var description = $(':nth-child(4)',row).html();
-		var dt, dd, ddes;
+		var date = $(':nth-child(5)',row).html();
+		var dt, ddes, dd;
 		$("#displayTable").find("tr").each(function() {
 			dt = $(':nth-child(2)',this).html();
-			dd = $(':nth-child(3)',this).html();
+			dd = $(':nth-child(5)',this).html();
 			ddes = $(':nth-child(4)',this).html();
-			if(title == dt && date == dd && description == ddes){
+			if(title == dt && description == ddes && date == dd){
 				//console.log("duplicate");
 				dup = true;
 			}
@@ -156,7 +156,7 @@ $(document).ready(function() {
 			$(this).parent().find("td").each(function(col) {
 				//console.log("Value: " + $(this).html());
 				var data;
-				if(col === 2){
+				if(col === 4){
 					data = elt("td","dateWidth");
 					console.log($(this).html());
 				}
@@ -167,6 +167,7 @@ $(document).ready(function() {
 				var node = document.createTextNode($(this).html());
 				data.appendChild(node);
 				if($(this).html() === "?"){
+					data.className="removeThisRow";
 					data.onclick = function(){removeRow(data)};		
 				}
 				newRow.appendChild(data);
@@ -242,9 +243,9 @@ $(document).ready(function() {
 
 
 	$("#titleHeading").click(function(){sortTable(1)});
-	$("#yearHeading").click(function(){sortTable(2)});
+	$("#ratingHeading").click(function(){sortTable(2)});
 	$("#descriptionHeading").click(function(){sortTable(3)});
-	$("#ratingHeading").click(function(){sortTable(4)});
+	$("#yearHeading").click(function(){sortTable(4)});
 	function sortTable(n) {
   		var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   		table = document.getElementById("displayTable");
