@@ -1,1 +1,1 @@
-# MovieCompareOMDBAPI
+# MovieCompareTheMovieAPI
