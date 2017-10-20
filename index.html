@@ -15,9 +15,6 @@
 		<form target="_self">
 			<label for="title" id="titleLabel">Title: </label>
 			<input type="text" id="title" required><br>
-			<label for="year" id="yearLabel">Year: </label>
-			<!-- max year will be set using jquery -->
-			<input type="number" id="year" min=1888><br>
 			<button id="searchButton">Search</button>
 		</form>
 	</div>
@@ -25,12 +22,12 @@
 
 	<div id="resultsContainer">
 		<table id = "resultsTable">
-			<caption>Results</caption>
+			<caption>- Results -</caption>
 			<tr>
 				<th>#</th>
 				<th>Title</th>
-				<th>Year</th>
-				<th>Description</th>
+				<th class="dateWidth">Year</th>
+				<th id="descriptionStyle">Description</th>
 				<th>Rating</th>
 				<th>Add</th>
 
@@ -38,7 +35,7 @@
 			<tr id="resultsOne">
 				<td></td>
 				<td></td>
-				<td></td>
+				<td class="dateWidth"></td>
 				<td></td>
 				<td></td>
 				<td class="addRow"></td>
@@ -46,7 +43,7 @@
 			<tr id="resultsTwo">
 				<td></td>
 				<td></td>
-				<td></td>
+				<td class="dateWidth"></td>
 				<td></td>
 				<td></td>
 				<td class="addRow"></td>
@@ -54,7 +51,7 @@
 			<tr id="resultsThree">
 				<td></td>
 				<td></td>
-				<td></td>
+				<td class="dateWidth"></td>
 				<td></td>
 				<td></td>
 				<td class="addRow"></td>
@@ -62,7 +59,7 @@
 			<tr id="resultsFour">
 				<td></td>
 				<td></td>
-				<td></td>
+				<td class="dateWidth"></td>
 				<td></td>
 				<td></td>
 				<td class="addRow"></td>
@@ -70,15 +67,16 @@
 			<tr id="resultsFive">
 				<td></td>
 				<td></td>
-				<td></td>
+				<td class="dateWidth"></td>
 				<td></td>
 				<td></td>
 				<td class="addRow"></td>
 			</tr>
 		</table>
-		<button id="prevFive">Previous</button>
-		<button id="nextFive">Next</button>
-		<button id="clearResults">Clear</button>
+		<button id="prevFive" class="resultsButtons">Previous</button>
+		<button id="clearResults" class="resultsButtons">Clear</button>
+		<button id="nextFive" class="resultsButtons">Next</button>
+		
 		<!--
     	<p class="foundTitle">Title</h3>
     	<p class="plot">Plot</p>
@@ -90,11 +88,11 @@
 	<div id="tableContainer">
 		<table id="displayTable">
 			
-			<caption>Your Movies</caption>
+			<caption>- Your Movies -</caption>
 			<tr>
 				<th>#</th>
 				<th id="titleHeading">Title</th>
-				<th id="yearHeading">Year</th>
+				<th class ="dateWidth" id="yearHeading">Year</th>
 				<th id="descriptionHeading">Description</th>
 				<th id="ratingHeading">Rating</th>
 				<th>Remove</th>

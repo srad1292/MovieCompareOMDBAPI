@@ -1,45 +1,6 @@
-/**
-
-Steps done 
-
-1 - Main Heading
-2 - Title Input
-3 - Get data through API from title input
-4 - Search button works
-5 - Display results of the search
-6 - Displays five items at a time
-7 - Correctly displays even if a movie has an empty field
-8 - Searching, prev, next clears first
-9 - Previous works only when it should
-10 - Next works only when it should
-11 - Clear works
-12 - Button on a result adds movie to 'your movies'
-13 - 'your movies' displays correctly
-14 - Removing an item from 'your movies' works
-15 - Numbers update accurately
-16 - Clicking to add doesn't add something already added
-17 - Sort the 'your movies' table
-18 - A clear button for 'your movies'
-
-Should - 
-1 - A 0 rating be left as 0 or changed to N/A (how does each affect sorting)
-2 - Removing the only item on results table hide the table
-
-Steps left
-1 - Make tables look nice(maybe use bootstrap)
-2 - Clean up UI
-3 - Clean up code
-*/
-
 $(document).ready(function() {
 	
-	/**
-	Set the maximum for the year picker to 
-	the present year + a few years ahead
-	*/
 	var COLS = 5;
-	var currentYear = (new Date()).getFullYear();
-	$("#year").attr("max",currentYear+5);
 	var $Form = $('form');
 	var qResults;
 	var $Container = $('#resultsContainer');
@@ -66,7 +27,7 @@ $(document).ready(function() {
 	    	
 	        complete: function(p_oXHR, p_sStatus){
 	            oData = $.parseJSON(p_oXHR.responseText);
-	            console.log(oData);	
+	            //console.log(oData);	
 				if (oData.Response === "False") {
 					$Container.hide();
 				}
@@ -179,7 +140,7 @@ $(document).ready(function() {
 			dd = $(':nth-child(3)',this).html();
 			ddes = $(':nth-child(4)',this).html();
 			if(title == dt && date == dd && description == ddes){
-				console.log("duplicate");
+				//console.log("duplicate");
 				dup = true;
 			}
 			//$(this).children("td:first").html(s);
@@ -189,11 +150,20 @@ $(document).ready(function() {
 
 	$(".addRow").on('click', function(){
 		event.stopPropagation();
+		var col = 0;
 		if(!isDuplicate($(this).parent())){
 			var newRow = elt("tr");
-			$(this).parent().find("td").each(function() {
-				console.log("Value: " + $(this).html());
-				var data = elt("td");
+			$(this).parent().find("td").each(function(col) {
+				//console.log("Value: " + $(this).html());
+				var data;
+				if(col === 2){
+					data = elt("td","dateWidth");
+					console.log($(this).html());
+				}
+				else{
+					data = elt("td");
+				}
+				col++;
 				var node = document.createTextNode($(this).html());
 				data.appendChild(node);
 				if($(this).html() === "?"){
@@ -205,6 +175,7 @@ $(document).ready(function() {
 			tc.appendChild(newRow);
 			setNumbers();
 			//$tableContainer.append(newRow);
+			
 			$tableContainer.show();
 		}
 		//create a row with data based on the row to add
@@ -221,11 +192,15 @@ $(document).ready(function() {
 		return elt;
 	}
 
+	function addDescriptionClass() {
+
+	}
+
 	function removeRow(data){
 		var parent = data.parentElement.parentElement;
 		var child = data.parentElement; 
 		//console.log()
-		console.log(data.parentElement.parentElement);
+		//console.log(data.parentElement.parentElement);
 		parent.removeChild(child);
 		if(isDisplayTableEmpty()){
 			$tableContainer.hide();
@@ -337,6 +312,40 @@ $(document).ready(function() {
 		$tableContainer.hide();
 	});
 });
+
+
+
+/**
+
+Steps done 
+
+1 - Main Heading
+2 - Title Input
+3 - Get data through API from title input
+4 - Search button works
+5 - Display results of the search
+6 - Displays five items at a time
+7 - Correctly displays even if a movie has an empty field
+8 - Searching, prev, next clears first
+9 - Previous works only when it should
+10 - Next works only when it should
+11 - Clear works
+12 - Button on a result adds movie to 'your movies'
+13 - 'your movies' displays correctly
+14 - Removing an item from 'your movies' works
+15 - Numbers update accurately
+16 - Clicking to add doesn't add something already added
+17 - Sort the 'your movies' table
+18 - A clear button for 'your movies'
+
+Should - 
+1 - A 0 rating be left as 0 or changed to N/A (how does each affect sorting)
+
+Steps left
+1 - Make tables look nice(maybe use bootstrap)
+2 - Clean up UI
+3 - Clean up code
+*/
 
 
 
