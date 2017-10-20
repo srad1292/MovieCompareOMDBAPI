@@ -1,77 +1,56 @@
 $(document).ready(function() {
 	
-	var COLS = 5;
 	var $Form = $('form');
 	var qResults;
 	var $Container = $('#resultsContainer');
 	var $tableContainer = $('#tableContainer');
 	$Container.hide();
 	$tableContainer.hide();
-	//initDisplayTable();
 	
 	$Form.on('submit', function(p_oEvent){
 		clearOutResults();
 		getResults(p_oEvent);     
 	});
 
+	/**
+	function: getResults
+	This function performs the AJAX call to the api
+	using the users given input.  Upon success, this
+	function calls the fillOutResults function which
+	fills out the results table with the data
+	*/
 	function getResults(p_oEvent){
 		var sUrl, sMovie;
 		var oData;
 	    p_oEvent.preventDefault();
 		sMovie = $Form.find('#title').val();
-	    //Get movie by id
-	    //sUrl = 'https://api.themoviedb.org/3/movie/330459?api_key=97058a18f3b899a2e57452cec18ee321';
-		//Search for movies with given text
 		sUrl = 'https://api.themoviedb.org/3/search/movie?api_key=97058a18f3b899a2e57452cec18ee321&query=' + sMovie;
 	    $.ajax(sUrl, {
 	    	
 	        complete: function(p_oXHR, p_sStatus){
 	            oData = $.parseJSON(p_oXHR.responseText);
-	            //console.log(oData);	
 				if (oData.Response === "False") {
 					$Container.hide();
 				}
 				else{
-//					setData(oData);
 					qResults = oData;
-					fillOutResults("search");
+					fillOutResults(0);
 				} 
 	        }
 	    });
-
 	}
 
-	function fillOutResults(callee) {
-		var row = 0;
+	/*
+	function: fillOutResults
+	This function takes a starting row number and
+	fills out the results table with up to five results
+	starting with the given row number.  It fills out
+	the table like:
+	number - title - score - description - release - add
+	*/
+	function fillOutResults(row_num) {
+		var row = row_num;
 		var col = 0;
-	
-		if(callee !== "search"){
-			var rOne = $("#resultsOne").find("td:first").text();
-			var rTwo = $("#resultsTwo").find("td:first").text();
-			var rThree = $("#resultsThree").find("td:first").text();
-			var rFour = $("#resultsFour").find("td:first").text();
-			var rFive = $("#resultsFive").find("td:first").text();
-		}
-		if(callee === "next"){
-			//turn this row into a number
-			var temp = Number(rFive || rFour || rThree || rTwo || rOne);
-			if(temp >= qResults.results.length) return;
-			else{
-				row = temp;
-				clearOutResults();
-			}
-		}
-		if(callee === "prev"){
-			//turn this row into a number
-			var temp = Number(rOne) - 6;
-			
-			if(temp < 0) return;
-			else {
-				row = temp;
-				clearOutResults();
-			}
-
-		}
 	
 		var currentResult = qResults.results[row];
 		$("#resultsTable").find("td").each(function() {
@@ -92,8 +71,7 @@ $(document).ready(function() {
 					var over = currentResult.overview;
 					if(over === ""){
 						over = "N/A";
-					}
-					
+					}				
 					$(this).html(over);
 					col++;
 				}
@@ -107,7 +85,6 @@ $(document).ready(function() {
 					$(this).text("?")
 					if(qResults.results.length > row){
 						currentResult = qResults.results[row];
-
 					}
 				}
 			}
@@ -115,10 +92,74 @@ $(document).ready(function() {
 		$Container.show();
 	}
 
+	/**
+	Function when #nextFive is clicked:
+	This function figures out the row number
+	based on the last displayed row number + 1
+	If the number is less than the amount of results
+	returned by the API then it calls fillOutResults
+	with the calculated row
+	*/
+	$("#nextFive").click(function(){
+		var row;
+		var rOne = $("#resultsOne").find("td:first").text();
+		var rTwo = $("#resultsTwo").find("td:first").text();
+		var rThree = $("#resultsThree").find("td:first").text();
+		var rFour = $("#resultsFour").find("td:first").text();
+		var rFive = $("#resultsFive").find("td:first").text();
+		//turn this row into a number
+		var temp = Number(rFive || rFour || rThree || rTwo || rOne);
+		if(temp >= qResults.results.length){
+			return;
+		}
+		else{
+				row = temp;
+				clearOutResults();
+				fillOutResults(row);
+		}
+	});
+
+	/**
+	Function when #prevFive is clicked:
+	This function figures out the row number
+	based on the first displayed row number - 1
+	If the number is greater than 0 then it
+	calls fillOutResults with the calculated row
+	*/
+	$("#prevFive").click(function(){
+		var row;
+		var rOne = $("#resultsOne").find("td:first").text();
+		//turn this row into a number
+		var temp = Number(rOne) - 6;
+		
+		if(temp < 0){
+			return;
+		}
+		else {
+			row = temp;
+			clearOutResults();
+			fillOutResults(row);
+		}
+	});
+
+/**
 	function setData(oData) {
 		qResults = oData;
 	}
+*/
+	//Handles when clear results is clicked
+	$("#clearResults").click(function(){
+		clearOutResults(); 
+		$Container.hide();
+	});
 
+	/**
+	Function: clearOutResults()
+	Iterates through the results table and 
+	sets each td to empty text so that
+	a new search, a prev click, and a next click
+	will all work without previous data getting in the way
+	*/
 	function clearOutResults(){
 		$("#resultsTable").find("td").each(function() { 
 			$(this).html("");
@@ -126,39 +167,21 @@ $(document).ready(function() {
 	}
 
 	/**
-	Check display table to make sure you don't
-	add a movie multiple times
+	Function: addRow clicked
+	Ensures that the row the user wants to add
+	is not already being displayed.  If it's not
+	then it iterates through the cells and adds 
+	that information to a new row in the display table
 	*/
-	function isDuplicate(row) {
-		var dup = false;
-		var title = $(':nth-child(2)',row).html();
-		var description = $(':nth-child(4)',row).html();
-		var date = $(':nth-child(5)',row).html();
-		var dt, ddes, dd;
-		$("#displayTable").find("tr").each(function() {
-			dt = $(':nth-child(2)',this).html();
-			dd = $(':nth-child(5)',this).html();
-			ddes = $(':nth-child(4)',this).html();
-			if(title == dt && description == ddes && date == dd){
-				//console.log("duplicate");
-				dup = true;
-			}
-			//$(this).children("td:first").html(s);
-		});
-		return dup;
-	}
-
 	$(".addRow").on('click', function(){
 		event.stopPropagation();
 		var col = 0;
 		if(!isDuplicate($(this).parent())){
 			var newRow = elt("tr");
 			$(this).parent().find("td").each(function(col) {
-				//console.log("Value: " + $(this).html());
 				var data;
 				if(col === 4){
 					data = elt("td","dateWidth");
-					console.log($(this).html());
 				}
 				else{
 					data = elt("td");
@@ -175,16 +198,40 @@ $(document).ready(function() {
 			var tc = document.getElementById("displayTable");
 			tc.appendChild(newRow);
 			setNumbers();
-			//$tableContainer.append(newRow);
-			
+			console.log($("#displayTable").height())			
 			$tableContainer.show();
 		}
-		//create a row with data based on the row to add
-		//add row to the table
-		//display the table
 	});
 
+	/**
+	Function: isDuplicate
+	Check display table to make sure you don't
+	add a movie multiple times by checking to see
+	if the date, title, and description don't all match
+	*/
+	function isDuplicate(row) {
+		var dup = false;
+		var title = $(':nth-child(2)',row).html();
+		var description = $(':nth-child(4)',row).html();
+		var date = $(':nth-child(5)',row).html();
+		var dt, ddes, dd;
+		$("#displayTable").find("tr").each(function() {
+			dt = $(':nth-child(2)',this).html();
+			dd = $(':nth-child(5)',this).html();
+			ddes = $(':nth-child(4)',this).html();
+			if(title == dt && description == ddes && date == dd){
+				dup = true;
+			}
+			//$(this).children("td:first").html(s);
+		});
+		return dup;
+	}
 
+	/**
+	function: elt
+	Given an element name and optional classname
+	this function creates a new element and returns it
+	*/
 	function elt(name, className) {
 		var elt = document.createElement(name);
 		if(className){
@@ -193,15 +240,17 @@ $(document).ready(function() {
 		return elt;
 	}
 
-	function addDescriptionClass() {
-
-	}
-
+	/**
+	Function: removeRow
+	This function handles when a user clicks
+	to remove a row.  It removes the tr element
+	from the table element.  If the resulting table
+	is empty then it hides the container, otherwise
+	it updates the row numbers
+	*/
 	function removeRow(data){
 		var parent = data.parentElement.parentElement;
 		var child = data.parentElement; 
-		//console.log()
-		//console.log(data.parentElement.parentElement);
 		parent.removeChild(child);
 		if(isDisplayTableEmpty()){
 			$tableContainer.hide();
@@ -212,6 +261,10 @@ $(document).ready(function() {
 
 	}
 
+	/**
+	Function: isDisplayTableEmpty
+	This function ensures that there is at least one row of data
+	*/
 	function isDisplayTableEmpty(){
 		var table = document.getElementById("displayTable");
 		var rows = table.getElementsByTagName("tr");
@@ -221,6 +274,11 @@ $(document).ready(function() {
 		return true;
 	}
 
+	/*
+	Function: setNumbers
+	This function iterates through the rows
+	excluding the header and sets the row numbers
+	*/
 	function setNumbers() {
 		var count = 1;
 		$("#displayTable").find("tr").each(function(count) {
@@ -233,15 +291,18 @@ $(document).ready(function() {
 	}
 
 
-
-	$("#nextFive").click(function(){fillOutResults("next")});
-	$("#prevFive").click(function(){fillOutResults("prev")});
-	$("#clearResults").click(function(){
-		clearOutResults(); 
-		$Container.hide();
-	});
-
-
+	/**
+	Function sortTable
+	This function is called when one of the sortable columns
+	has it's heading clicked.  It iterates through the table
+	sorting in asc if unsorted or if it is sorted it switched
+	between asc and desc.  As the table is being iterated through
+	two rows are compared.  If they should switch places than
+	they are marked to switch.  The iteration loop is has a break
+	and then the rows are switched.  The loop happens until it
+	goes through the table without switching any rows.  
+	Afterwards setNumbers is called to update the row numbers
+	*/
 	$("#titleHeading").click(function(){sortTable(1)});
 	$("#ratingHeading").click(function(){sortTable(2)});
 	$("#descriptionHeading").click(function(){sortTable(3)});
@@ -250,49 +311,32 @@ $(document).ready(function() {
   		var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
   		table = document.getElementById("displayTable");
   		switching = true;
-  		// Set the sorting direction to ascending:
   		dir = "asc";
-  		/* Make a loop that will continue until
-  		no switching has been done: */
+ 
   		while (switching) {
-  		  // Start by saying: no switching is done:
   		  switching = false;
   		  rows = table.getElementsByTagName("tr");
-  		  /* Loop through all table rows (except the
-  		  first, which contains table headers): */
   		  for (i = 1; i < (rows.length - 1); i++) {
-  		    // Start by saying there should be no switching:
   		    shouldSwitch = false;
-  		    /* Get the two elements you want to compare,
-  		    one from current row and one from the next: */
   		    x = rows[i].getElementsByTagName("td")[n];
   		    y = rows[i + 1].getElementsByTagName("td")[n];
-  		    /* Check if the two rows should switch place,
-  		    based on the direction, asc or desc: */
   		    if (dir == "asc") {
   		      if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-  		        // If so, mark as a switch and break the loop:
   		        shouldSwitch= true;
   		        break;
   		      }
   		    } else if (dir == "desc") {
   		      if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-  		        // If so, mark as a switch and break the loop:
   		        shouldSwitch= true;
   		        break;
   		      }
   		    }
   		  }
   		  if (shouldSwitch) {
-  		    /* If a switch has been marked, make the switch
-  		    and mark that a switch has been done: */
   		    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
   		    switching = true;
-  		    // Each time a switch is done, increase this count by 1:
   		    switchcount ++;
   		  } else {
-  		    /* If no switching has been done AND the direction is "asc",
-  		    set the direction to "desc" and run the while loop again. */
   		    if (switchcount == 0 && dir == "asc") {
   		      dir = "desc";
   		      switching = true;
@@ -302,55 +346,17 @@ $(document).ready(function() {
   		setNumbers();
 	}
 
-
+	/**
+	Function: clearDisplay clicked
+	This function removes every non-header row
+	from the display table and then hides the container
+	*/
 	$("#clearDisplay").click(function(){
 		var table = document.getElementById("displayTable");
 		var rows = table.getElementsByTagName("tr");
 		for(var i = rows.length-1; i > 0; i--){
 			table.removeChild(rows[i]);
-			//removeRow(rows[i].firstChild);
 		}
 		$tableContainer.hide();
 	});
 });
-
-
-
-/**
-
-Steps done 
-
-1 - Main Heading
-2 - Title Input
-3 - Get data through API from title input
-4 - Search button works
-5 - Display results of the search
-6 - Displays five items at a time
-7 - Correctly displays even if a movie has an empty field
-8 - Searching, prev, next clears first
-9 - Previous works only when it should
-10 - Next works only when it should
-11 - Clear works
-12 - Button on a result adds movie to 'your movies'
-13 - 'your movies' displays correctly
-14 - Removing an item from 'your movies' works
-15 - Numbers update accurately
-16 - Clicking to add doesn't add something already added
-17 - Sort the 'your movies' table
-18 - A clear button for 'your movies'
-
-Should - 
-1 - A 0 rating be left as 0 or changed to N/A (how does each affect sorting)
-
-Steps left
-1 - Make tables look nice(maybe use bootstrap)
-2 - Clean up UI
-3 - Clean up code
-*/
-
-
-
-
-
-
-
