@@ -19,11 +19,11 @@ Steps done
 15 - Numbers update accurately
 16 - Clicking to add doesn't add something already added
 17 - Sort the 'your movies' table
+18 - A clear button for 'your movies'
 
 Should - 
 1 - A 0 rating be left as 0 or changed to N/A (how does each affect sorting)
 2 - Removing the only item on results table hide the table
-
 
 Steps left
 1 - Make tables look nice(maybe use bootstrap)
@@ -224,10 +224,25 @@ $(document).ready(function() {
 	function removeRow(data){
 		var parent = data.parentElement.parentElement;
 		var child = data.parentElement; 
+		//console.log()
 		console.log(data.parentElement.parentElement);
 		parent.removeChild(child);
-		setNumbers();
+		if(isDisplayTableEmpty()){
+			$tableContainer.hide();
+		}
+		else{
+			setNumbers();
+		}
 
+	}
+
+	function isDisplayTableEmpty(){
+		var table = document.getElementById("displayTable");
+		var rows = table.getElementsByTagName("tr");
+		if (rows.length > 1) {
+			return false;
+		}
+		return true;
 	}
 
 	function setNumbers() {
@@ -310,6 +325,17 @@ $(document).ready(function() {
   		}
   		setNumbers();
 	}
+
+
+	$("#clearDisplay").click(function(){
+		var table = document.getElementById("displayTable");
+		var rows = table.getElementsByTagName("tr");
+		for(var i = rows.length-1; i > 0; i--){
+			table.removeChild(rows[i]);
+			//removeRow(rows[i].firstChild);
+		}
+		$tableContainer.hide();
+	});
 });
 
 
