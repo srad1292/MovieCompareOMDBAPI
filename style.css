@@ -45,22 +45,17 @@ button:hover {
 }
 
 
-/**CSS for Tables and their containers*//
+/**CSS for Tables and their containers*/
 #resultsContainer {
 	margin-bottom: 3rem;
 }
 
 #tableContainer {
-	margin-top: 3rem;
+	margin-bottom: 3rem;
 }
 
 #resultsContainer, #tableContainer {
 	text-align: center;
-}
-
-caption {
-	font-size: 1.4em;
-	font-weight: bold;	
 }
 
 .resultsButtons{
@@ -71,7 +66,7 @@ table {
 	border-collapse: collapse;
 	empty-cells: hide;
 	margin: auto;
-	width: 100%;
+	width: 90%;
 }
 
 th, td{
@@ -95,6 +90,14 @@ td {
 	background-color: rgb(153, 214, 255);
 	padding-bottom: 1rem;
 	padding-top: 1rem;
+}
+
+tr:nth-child(even) td{
+	background-color: #99d6ff;
+}
+
+tr:nth-child(odd) td{
+	background-color: #33adff;
 }
 
 td:empty{
