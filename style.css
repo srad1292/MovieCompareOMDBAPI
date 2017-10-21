@@ -30,6 +30,7 @@ input {
 #noResults{
 	font-size: 0.8em;
 	color: red;
+	display: none;
 }
 
 button {
@@ -56,6 +57,7 @@ button:hover {
 
 #resultsContainer, #tableContainer {
 	text-align: center;
+	display: none;
 }
 
 .resultsButtons{
