@@ -14,7 +14,8 @@
 	<div class="selectContainer">
 		<form target="_self">
 			<label for="title" id="titleLabel">Title: </label>
-			<input type="text" id="title" required><br>
+			<input type="text" id="title" pattern="[A-Za-z0-9]{1}.{0,}" required><br>
+			<p id="noResults">No Matching Movies Found</p>
 			<button id="searchButton">Search</button>
 		</form>
 	</div>

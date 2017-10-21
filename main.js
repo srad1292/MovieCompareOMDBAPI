@@ -2,6 +2,7 @@ $(document).ready(function() {
 	
 	var $Form = $('form');
 	var qResults;
+	$("#noResults").hide();
 	var $Container = $('#resultsContainer');
 	var $tableContainer = $('#tableContainer');
 	$Container.hide();
@@ -25,8 +26,7 @@ $(document).ready(function() {
 	    p_oEvent.preventDefault();
 		sMovie = $Form.find('#title').val();
 		sUrl = 'https://api.themoviedb.org/3/search/movie?api_key=97058a18f3b899a2e57452cec18ee321&query=' + sMovie;
-	    $.ajax(sUrl, {
-	    	
+	    $.ajax(sUrl, {   	
 	        complete: function(p_oXHR, p_sStatus){
 	            oData = $.parseJSON(p_oXHR.responseText);
 				if (oData.Response === "False") {
@@ -34,7 +34,14 @@ $(document).ready(function() {
 				}
 				else{
 					qResults = oData;
-					fillOutResults(0);
+					if(qResults.results.length>0){
+						$("#noResults").hide();
+						fillOutResults(0);
+					}
+					else{
+						$("#noResults").show();
+						$Container.hide();
+					}
 				} 
 	        }
 	    });
@@ -51,7 +58,7 @@ $(document).ready(function() {
 	function fillOutResults(row_num) {
 		var row = row_num;
 		var col = 0;
-	
+		
 		var currentResult = qResults.results[row];
 		$("#resultsTable").find("td").each(function() {
 			if(row < qResults.results.length){
@@ -142,11 +149,6 @@ $(document).ready(function() {
 		}
 	});
 
-/**
-	function setData(oData) {
-		qResults = oData;
-	}
-*/
 	//Handles when clear results is clicked
 	$("#clearResults").click(function(){
 		clearOutResults(); 
@@ -198,7 +200,7 @@ $(document).ready(function() {
 			var tc = document.getElementById("displayTable");
 			tc.appendChild(newRow);
 			setNumbers();
-			console.log($("#displayTable").height())			
+			//console.log($("#displayTable").height())			
 			$tableContainer.show();
 		}
 	});

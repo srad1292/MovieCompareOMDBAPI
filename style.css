@@ -27,6 +27,11 @@ input {
 	width: 20%;
 }
 
+#noResults{
+	font-size: 0.8em;
+	color: red;
+}
+
 button {
 	background-color: #33adff;
 	border-radius: 5px;
@@ -60,7 +65,6 @@ caption {
 
 table {
 	border-collapse: collapse;
-	border: 1px solid black;
 	empty-cells: hide;
 	margin: auto;
 	width: 100%;
@@ -78,7 +82,7 @@ th, td{
 th {
 	background-color: #33adff;
 	background-color: rgb(51, 173, 255);
-	border-bottom: 1px solid black;
+	border: 1px solid black;
 
 }
 
@@ -88,6 +92,12 @@ td {
 	padding-bottom: 1rem;
 	padding-top: 1rem;
 }
+
+td:empty{
+	border:0;
+	background-color: white;
+}
+
 
 /*Keep the whole date on one line when the screen size is big enough*/
 .dateWidth {
