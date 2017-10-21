@@ -63,6 +63,10 @@ caption {
 	font-weight: bold;	
 }
 
+.resultsButtons{
+	margin-bottom: 1rem;
+}
+
 table {
 	border-collapse: collapse;
 	empty-cells: hide;
@@ -98,6 +102,9 @@ td:empty{
 	background-color: white;
 }
 
+#clearDisplay{
+	margin-bottom: 1em;
+}
 
 /*Keep the whole date on one line when the screen size is big enough*/
 .dateWidth {
